@@ -2,6 +2,7 @@ package app.controller;
 
 import app.model.User;
 import app.service.UserService;
+import app.util.UserValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
+    private final UserValidator userValidator;
 
     @GetMapping
     public String home(Model model) {
@@ -26,7 +28,6 @@ public class UserController {
 
     @GetMapping("/new")
     public String newCustomerForm(Model model) {
-//        model.addAttribute("add", true);
         model.addAttribute("user", new User());
         return "users/new";
     }
@@ -34,6 +35,7 @@ public class UserController {
     @PostMapping("/new")
     public String create(@ModelAttribute("user") @Valid User user,
                          BindingResult bindingResult) {
+        userValidator.validate(user, bindingResult);
         if (bindingResult.hasErrors())
             return "users/new";
         userService.save(user);
@@ -54,13 +56,13 @@ public class UserController {
         return "users/edit";
     }
 
-    @PostMapping("/edit")
+    @PatchMapping("/edit")
     public String editUser(@RequestParam(name = "userId") int userId,
                            @ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
-
+        userValidator.validate(user, bindingResult);
+        if (bindingResult.hasErrors()) {
             return "users/edit";
-        user.setId(userId);
+        }
         userService.save(user);
         return "redirect:/users";
     }
@@ -73,9 +75,8 @@ public class UserController {
         return "users/delete";
     }
 
-    @PostMapping("/delete")
-    public String deleteUser(@RequestParam(name = "userId") int userId,
-                             @ModelAttribute("user") User user) {
+    @DeleteMapping("/delete")
+    public String deleteUser(@RequestParam(name = "userId") int userId, @ModelAttribute("user") User user) {
         userService.delete(userId);
         return "redirect:/users";
     }

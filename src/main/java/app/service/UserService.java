@@ -1,36 +1,18 @@
 package app.service;
 
 import app.model.User;
-import app.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
-@Transactional
-@RequiredArgsConstructor
+public interface UserService {
 
-public class UserService {
+    void save(User user);
 
-    private final UserRepository userRepository;
+    List<User> listAll();
 
+    User get(int id);
 
-    public void save(User user) {
-        userRepository.save(user);
-    }
+    void delete(int id);
 
-    public List<User> listAll() {
-        return (List<User>) userRepository.findAll();
-    }
-
-    public User get(int id) {
-
-        return userRepository.findById(id).get();
-    }
-
-    public void delete(int id) {
-        userRepository.deleteById(id);
-    }
+    User findByEmail(String email);
 }

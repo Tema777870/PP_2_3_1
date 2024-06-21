@@ -11,8 +11,8 @@
 <p th:text="${user.getName() + ', ' + user.getAge()}">VALUE</p>
 <p th:text="${'Email: ' + user.getEmail()}">VALUE</p>
 <p th:text="${user.getId()}">VALUE</p>
-<form th:action="@{'/users/delete?userId=' + ${user.getId()}}" method="post">
-    <input type="hidden" th:field="*{user.id}"/>
+<form th:method="DELETE" th:action="@{'/users/delete?userId=' + ${user.getId()}}" >
+    <input type="hidden" name="_method" value="DELETE"/>
     <button type="submit">Yes, Delete User</button>
 </form>
 
