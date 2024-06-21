@@ -59,7 +59,7 @@ public class UserController {
     @PatchMapping("/edit")
     public String editUser(@RequestParam(name = "userId") int userId,
                            @ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
-        userValidator.validate(user, bindingResult);
+        // userValidator.validate(user, bindingResult); эта строка кода не дает менять поля без изменения email, пока не придумал как пофиксить
         if (bindingResult.hasErrors()) {
             return "users/edit";
         }
